@@ -9,8 +9,8 @@ void create_console()
 	
 	AllocConsole();
 	freopen_s(&f_handles[0], "CONOUT$", "w", stdout);
-	freopen_s(&f_handles[0], "CONOUT$", "w", stderr);
-	freopen_s(&f_handles[0], "CONIN$", "w", stdin);
+	freopen_s(&f_handles[1], "CONOUT$", "w", stderr);
+	freopen_s(&f_handles[2], "CONIN$", "r", stdin);
 
 	SetConsoleTitleA("Magical Madness | Disassember & Reverse Engineering Tool");
 }
