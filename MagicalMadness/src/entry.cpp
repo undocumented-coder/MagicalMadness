@@ -1,7 +1,9 @@
 #include <Windows.h>
 #include <iostream>
+#include <memory>
 
 #include "loader/loader.hpp"
+#include "interface/interface.hpp"
 
 void create_console()
 {
@@ -9,17 +11,19 @@ void create_console()
 	
 	AllocConsole();
 	freopen_s(&f_handles[0], "CONOUT$", "w", stdout);
-	freopen_s(&f_handles[1], "CONOUT$", "w", stderr);
-	freopen_s(&f_handles[2], "CONIN$", "r", stdin);
+	freopen_s(&f_handles[0], "CONOUT$", "w", stderr);
+	freopen_s(&f_handles[0], "CONIN$", "w", stdin);
 
 	SetConsoleTitleA("Magical Madness | Disassember & Reverse Engineering Tool");
 }
 
+
 int main(int argc, char* argv[])
 {
-	create_console();
-
 	std::printf("Welcome to Magical Madness!\n");
+
+	std::unique_ptr<interface_t> window = std::make_unique<interface_t>("Magical Madness");
+	create_console();
 
 	if (argc != 2) // First argument is it's own file path.
 	{
@@ -31,7 +35,14 @@ int main(int argc, char* argv[])
 		executable.analyze();
 	}
 
-	while (true) {};
+	while (true)
+	{
+		if (window->messenger())
+			break;
+		window->render();
+	}
+
+	std::printf("Shutting down!\n");
 
 	return 1;
 }
