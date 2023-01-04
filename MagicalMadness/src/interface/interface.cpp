@@ -6,7 +6,7 @@
 #include "dependencies/imgui/imgui.h"
 #include "dependencies/imgui/imgui_impl_win32.h"
 #include "dependencies/imgui/imgui_impl_dx11.h"
-
+#include <dependencies/imgui/imgui_internal.h>
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -117,14 +117,12 @@ void interface_t::render() const
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	// ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow();
 
 	if (window_open)
 	{
 		ImGui::Begin("Magical Madness", &window_open);
-
-		ImGui::Text("Welcome to the Magical Madness graphical interface!");
-
+			ImGui::Text("Welcome to the Magical Madness graphical interface!");
 		ImGui::End();
 
 		ImGui::Begin("Import Pane", &window_open);

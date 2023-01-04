@@ -11,8 +11,8 @@ void create_console()
 	
 	AllocConsole();
 	freopen_s(&f_handles[0], "CONOUT$", "w", stdout);
-	freopen_s(&f_handles[0], "CONOUT$", "w", stderr);
-	freopen_s(&f_handles[0], "CONIN$", "w", stdin);
+	freopen_s(&f_handles[1], "CONOUT$", "w", stderr);
+	freopen_s(&f_handles[2], "CONIN$", "r", stdin);
 
 	SetConsoleTitleA("Magical Madness | Disassember & Reverse Engineering Tool");
 }
@@ -21,8 +21,6 @@ void create_console()
 int main(int argc, char* argv[])
 {
 	std::printf("Welcome to Magical Madness!\n");
-
-	std::unique_ptr<interface_t> window = std::make_unique<interface_t>("Magical Madness");
 	create_console();
 
 	if (argc != 2) // First argument is it's own file path.
@@ -31,16 +29,17 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
+		std::unique_ptr<interface_t> window = std::make_unique<interface_t>("Magical Madness");
+
 		loader_t executable{ argv[1] };
-		executable.analyze();
+		executable.testing();
+
+		while (!window->messenger())
+		{
+			window->render();
+		}
 	}
 
-	while (true)
-	{
-		if (window->messenger())
-			break;
-		window->render();
-	}
 
 	std::printf("Shutting down!\n");
 

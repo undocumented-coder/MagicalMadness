@@ -14,7 +14,7 @@ void print_error()
 	int n_bytes = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, NULL, GetLastError(), NULL, reinterpret_cast<LPSTR>(&ptr_msg), NULL, NULL);
 	if (!n_bytes)
 	{
-		std::printf("[Error]: Error in error handling, raw code: 0x%p\n", GetLastError());
+		std::printf("[Error]: Error in error handling, raw error code: 0x%p\n", GetLastError());
 	}
 	else
 	{
@@ -34,6 +34,16 @@ loader_t::~loader_t()
 		CloseHandle(this->h_file);
 }
 
+void loader_t::extract_sections_from_PE(PIMAGE_NT_HEADERS32 pe_header)
+{
+	PIMAGE_SECTION_HEADER first_section = IMAGE_FIRST_SECTION(pe_header);
+	for (std::uint32_t a = 0; a < pe_header->FileHeader.NumberOfSections; ++a)
+	{
+		PIMAGE_SECTION_HEADER current_section = first_section + a;
+		this->sections.emplace_back(reinterpret_cast<const char*>(current_section->Name), current_section->VirtualAddress, current_section->VirtualAddress + current_section->Misc.VirtualSize, current_section->PointerToRawData, current_section->SizeOfRawData, current_section->Characteristics);
+	}
+}
+
 template<typename T>
 T loader_t::get_image_directory_address(PIMAGE_NT_HEADERS32 pe_header, std::uint32_t data_directory_id)
 {
@@ -43,22 +53,51 @@ T loader_t::get_image_directory_address(PIMAGE_NT_HEADERS32 pe_header, std::uint
 		return reinterpret_cast<T>(nullptr);
 	}
 
-	PIMAGE_SECTION_HEADER first_section = IMAGE_FIRST_SECTION(pe_header);
 	IMAGE_DATA_DIRECTORY data_directory = pe_header->OptionalHeader.DataDirectory[data_directory_id];
 
-	for (std::uint32_t a = 0; a < pe_header->FileHeader.NumberOfSections; ++a)
-	{
-		PIMAGE_SECTION_HEADER current_section = first_section + a;
 
-		// Check if it falls into the correct section to add RVA to the new base.
-		if (current_section->VirtualAddress <= data_directory.VirtualAddress && current_section->VirtualAddress + current_section->SizeOfRawData > data_directory.VirtualAddress)
-		{
-			return reinterpret_cast<T>(reinterpret_cast<std::uint32_t>(this->map_base_address) + data_directory.VirtualAddress);
-		}
-	}
 
 	std::printf("[Error]: Failed to find base of data directory.\n");
 	return reinterpret_cast<T>(nullptr);
+}
+
+void loader_t::testing()
+{
+	std::printf("Analyzing: %s\n", this->file_path.substr(this->file_path.find_last_of("\\") + 1).c_str());
+	this->h_file = CreateFile(this->file_path.c_str(), GENERIC_READ, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+
+	if (this->h_file == INVALID_HANDLE_VALUE)
+	{
+		print_error();
+		return;
+	}
+
+	this->h_map = CreateFileMapping(this->h_file, NULL, PAGE_READONLY | SEC_IMAGE, NULL, NULL, NULL);
+
+	void* base_address = MapViewOfFile(this->h_map, FILE_MAP_READ, NULL, NULL, NULL);
+	this->map_base_address = base_address;
+
+	if (base_address != NULL)
+	{
+		std::printf("Successfully mapped process into address: 0x%p\n", base_address);
+		PIMAGE_DOS_HEADER dos_header = reinterpret_cast<PIMAGE_DOS_HEADER>(base_address);
+
+		if (!dos_header->e_lfanew)
+		{
+			std::printf("Program is not a valid PE file (Possibly just a DOS program)\n");
+			return;
+		}
+
+		PIMAGE_NT_HEADERS32 pe_header = reinterpret_cast<PIMAGE_NT_HEADERS32>(reinterpret_cast<std::uint32_t>(base_address) + dos_header->e_lfanew);
+		if (pe_header->Signature != IMAGE_NT_SIGNATURE)
+		{
+			std::printf("Program is not a valid PE file! (Possibly just a DOS program)\n");
+			return;
+		}
+
+		this->extract_sections_from_PE(pe_header);
+
+	}
 }
 
 // A complete guide to the internals of the windows PE format: http://www.csn.ul.ie/~caolan/pub/winresdump/winresdump/doc/pefile2.html
