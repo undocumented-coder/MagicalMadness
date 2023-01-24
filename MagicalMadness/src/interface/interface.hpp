@@ -4,7 +4,7 @@
 #include <memory>
 
 #include "graphics/LL_graphical.hpp"
-
+#include "loader/loader.hpp"
 
 // Holds higher level window interface code (Will eventually write this to act as a sort of interface, for now its just a window).
 class interface_t
@@ -22,6 +22,6 @@ public:
 
 
 	void initialize() const;
-	void render() const;
+	void render(const loader_output_t& information) const;
 	bool messenger() const;
 };

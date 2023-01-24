@@ -3,6 +3,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <unordered_map>
 
 // The loader will be responsible for opening the file and reading PE information about it.
 
@@ -28,6 +29,16 @@ struct section_t
 	};
 };
 
+struct loader_output_t
+{
+public:
+	loader_output_t() = default;
+	loader_output_t(const loader_output_t&) = delete; // copying this struct is dangerous cause it's very big.
+	std::string output{};
+	std::uint8_t successful = false;
+	std::unordered_map<std::string, std::string> disassembled_code{};
+};
+
 class loader_t
 {
 private:
@@ -44,6 +55,6 @@ public:
 	loader_t(const std::string& file_path) : file_path{ file_path } {};
 	~loader_t();
 
-	void analyze();
+	void analyze(loader_output_t& loader_output);
 	void testing();
 };

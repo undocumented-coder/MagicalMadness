@@ -115,7 +115,7 @@ typedef struct ZydisDisassembledInstruction_
  */
 ZYDIS_EXPORT ZyanStatus ZydisDisassembleIntel(ZydisMachineMode machine_mode,
     ZyanU64 runtime_address, const void* buffer, ZyanUSize length,
-    ZydisDisassembledInstruction *instruction);
+    ZydisDisassembledInstruction* instruction);
 
 /**
  * Disassemble an instruction and format it to human-readable text in a single step (AT&T syntax).

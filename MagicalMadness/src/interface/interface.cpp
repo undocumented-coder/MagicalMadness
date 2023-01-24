@@ -111,7 +111,7 @@ bool interface_t::messenger() const
 
 static bool window_open = true;
 
-void interface_t::render() const
+void interface_t::render(const loader_output_t& information) const
 {
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -121,25 +121,23 @@ void interface_t::render() const
 
 	if (window_open)
 	{
-		ImGui::Begin("Magical Madness", &window_open);
-			ImGui::Text("Welcome to the Magical Madness graphical interface!");
-		ImGui::End();
-
-		ImGui::Begin("Import Pane", &window_open);
-
-		ImGui::Text("Welcome to the import pane!");
-
-		ImGui::End();
-
-		ImGui::Begin("Export Pane", &window_open);
-
-		ImGui::Text("Welcome to the export pane!");
-
-		ImGui::End();
-
 		ImGui::Begin("PE Information", &window_open);
 
-		ImGui::Text("Welcome to the PE information pane!");
+			ImGui::Text("Successful disassembly: %s\n", information.successful ? "yes" : "no");
+			ImGui::TextUnformatted(information.output.c_str(), &*information.output.end());
+
+		ImGui::End();
+
+		ImGui::Begin("Disassembled Code", &window_open);
+
+			for (auto& [section, disassembly] : information.disassembled_code)
+			{
+				if (ImGui::TreeNode(section.c_str()))
+				{
+					ImGui::TextUnformatted(disassembly.c_str(), &*disassembly.end());
+					ImGui::TreePop();
+				}
+			}
 
 		ImGui::End();
 	}
