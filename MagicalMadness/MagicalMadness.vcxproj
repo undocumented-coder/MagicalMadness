@@ -70,6 +70,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(ProjectDir)src;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -92,6 +98,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)src\dependencies\zydis;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,11 +138,64 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\dependencies\imgui\imgui.cpp" />
+    <ClCompile Include="src\dependencies\imgui\imgui_demo.cpp" />
+    <ClCompile Include="src\dependencies\imgui\imgui_draw.cpp" />
+    <ClCompile Include="src\dependencies\imgui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="src\dependencies\imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="src\dependencies\imgui\imgui_tables.cpp" />
+    <ClCompile Include="src\dependencies\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\disassembler\disassembler.cpp" />
     <ClCompile Include="src\entry.cpp" />
+    <ClCompile Include="src\interface\graphics\LL_graphical.cpp" />
+    <ClCompile Include="src\interface\interface.cpp" />
     <ClCompile Include="src\loader\loader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\dependencies\imgui\imconfig.h" />
+    <ClInclude Include="src\dependencies\imgui\imgui.h" />
+    <ClInclude Include="src\dependencies\imgui\imgui_impl_dx11.h" />
+    <ClInclude Include="src\dependencies\imgui\imgui_impl_win32.h" />
+    <ClInclude Include="src\dependencies\imgui\imgui_internal.h" />
+    <ClInclude Include="src\dependencies\imgui\imstb_rectpack.h" />
+    <ClInclude Include="src\dependencies\imgui\imstb_textedit.h" />
+    <ClInclude Include="src\dependencies\imgui\imstb_truetype.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Decoder.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\DecoderTypes.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Defines.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Disassembler.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Encoder.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Formatter.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\FormatterBuffer.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Generated\EnumInstructionCategory.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Generated\EnumISAExt.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Generated\EnumISASet.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Generated\EnumMnemonic.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Generated\EnumRegister.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Internal\DecoderData.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Internal\EncoderData.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Internal\FormatterATT.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Internal\FormatterBase.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Internal\FormatterIntel.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Internal\SharedData.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Internal\String.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\MetaInfo.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Mnemonic.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Register.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Segment.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\SharedTypes.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\ShortString.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Status.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Utils.h" />
+    <ClInclude Include="src\dependencies\zydis\Zydis\Zydis.h" />
+    <ClInclude Include="src\disassembler\disassembler.hpp" />
+    <ClInclude Include="src\interface\graphics\LL_graphical.hpp" />
+    <ClInclude Include="src\interface\interface.hpp" />
     <ClInclude Include="src\loader\loader.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="src\dependencies\zydis\Zycore.lib" />
+    <Library Include="src\dependencies\zydis\Zydis.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
