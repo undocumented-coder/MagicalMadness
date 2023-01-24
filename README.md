@@ -1,6 +1,9 @@
 # MagicalMadness
  Disassembler for x86 PE files.
  
+ [1/23/22]
+ Linked up all the components together and added exception handling for finding errors easier.
+ 
  [1/17/23]
  Implemented Zydis disassembler.
  Adding graphical disassembled output later today.
