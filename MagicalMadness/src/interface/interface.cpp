@@ -117,8 +117,6 @@ void interface_t::render(const loader_output_t& information) const
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	ImGui::ShowDemoWindow();
-
 	if (window_open)
 	{
 		ImGui::Begin("PE Information", &window_open);
