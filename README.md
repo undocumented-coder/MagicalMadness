@@ -1,6 +1,9 @@
 # MagicalMadness
  Disassembler for x86 PE files.
  
+ # https://magicalmadness.me/
+ I've created an official website for the project.
+ 
  [1/23/22]
  Linked up all the components together and added exception handling for finding errors easier.
  
