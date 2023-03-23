@@ -1,0 +1,2 @@
+This compiler is completely custom and all written by me. 
+It is not nearly finished but is already advanced enough for any calculations you may need.

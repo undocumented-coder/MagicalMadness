@@ -39,6 +39,16 @@ int main(int argc, char* argv[])
 	if (argc != 2) // First argument is it's own file path.
 	{
 		std::printf("Please try to run MagicalMadness.exe with the file you'd like to analyze!\n");
+		std::printf("Running in test mode (no file given).\n");
+
+		std::unique_ptr<interface_t> window = std::make_unique<interface_t>("Magical Madness");
+
+		loader_output_t placeholder{};
+
+		while (!window->messenger())
+		{
+			window->render(placeholder);
+		}
 	}
 	else
 	{
