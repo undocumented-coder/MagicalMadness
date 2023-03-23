@@ -4,7 +4,10 @@
  # https://magicalmadness.me/
  I've created an official website for the project, powered by ReactJS & Mantine.
  
- [1/23/22]
+ [3/23/23]
+ Added a compiler I wrote!! Currently a tree walking interpreter with an LL(1) tail recursive parser. It supports the following operations: unary, negate, increment (not in parser though), decrement (not yet in parser either), parenthesis, and + - * / ^ % and C++ function calling, all with operator precedence implemented so that the math will match a calculators output. This language is a hybrid between lua and C++ because I enjoy both languages and thought it'd be fun to make a mix.
+ 
+ [1/23/23]
  Linked up all the components together and added exception handling for finding errors easier.
  
  [1/17/23]
